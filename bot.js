@@ -1,5 +1,7 @@
 const { Telegraf } = require('telegraf');
 const axios = require('axios');
+const express = require('express');
+const app = express();
 
 // توکن ربات تلگرام
 const TELEGRAM_BOT_TOKEN = '7807312929:AAHHxwN9t27Lq0of2m7Lv7KnyujH-1GZnC8';
@@ -53,5 +55,14 @@ bot.on('text', async (ctx) => {
     }
 });
 
-// راه‌اندازی ربات
-bot.launch().then(() => console.log('ربات راه‌اندازی شد.'));
+// راه‌اندازی Webhook در Express
+const port = process.env.PORT || 3000;
+app.use(bot.webhookCallback(`/webhook`));
+
+// تنظیم Webhook برای ربات تلگرام
+bot.telegram.setWebhook(`https://yourdomain.com/webhook`);
+
+// شروع سرور Express
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+});
